@@ -6,40 +6,71 @@ let Dialog = (function() {
 		let maskEle = document.createElement('div');
 		maskEle.classList.add('show-dialog', 'dialog');
 		maskEle.style = 'display: block';
+		maskEle.innerHTML = '<div class="dialog-header"></div>\
+			<div class="dialog-content"></div>\
+			<div class="dialog-footer"></div>';
+
 		console.log(maskEle);
 		document.body.appendChild(maskEle);
 		
 		instance = {
-			$el: maskEle, // 模态元素
+			$mask: maskEle, // 模态元素
+			$header: document.querySelector('.dialog .dialog-header'),
+			$content: document.querySelector('.dialog .dialog-content'),
+			$footer: document.querySelector('.dialog .dialog-footer'),
 			$isOpen: true, // dialog状态
-			close () {
-				this.$el.style = 'display: none';
+			close() {
+				this.$mask.style.display = 'none';
 				this.$isOpen = false;
 			},
-			open () {
-				this.$el.style = 'display: block'
+			open() {
+				this.$mask.style.display = 'block';
 				this.$isOpen = true;
 			},
-			toggle () {
+			toggle() {
 				if (this.$isOpen) {
 					this.close();
 				} else {
 					this.open();
 				}
+			},
+			$updateDOM(type, content) {
+				console.log(content)
+				if (!!content.nodeType) {
+					// this[type].chilNodes.length && this[type].appendChild(content);
+
+					// clear chilNodes
+					let tmpNode = this[type];
+					let firstEle = tmpNode.firstChild;
+					while( firstEle) {
+						tmpNode.removeChild(firstEle);
+						firstEle = tmpNode.firstChild
+					}
+					this[type].appendChild(content);
+				} else if (typeof content === 'string') {
+					this[type].textContent = content;
+				} else {
+					console.error('some error');
+				}
 			}
 		};
 	}
-	function Dialog(isShow, title, content) {
+	function Dialog(content, header, footer) {
 		if (!instance) {
 			init();
 		}
+		header && instance.$updateDOM('$header', header)
+		content && instance.$updateDOM('$content', content)
+		footer && instance.$updateDOM('$footer', footer)
 		return instance;
 	}
 	return Dialog;
 }());
 
 // Dialog().open() 也可以这样调用
-let myDialog = new Dialog('title', 'content');
+let newEl = document.createElement('div');
+newEl.innerHTML = 'hhhh';
+let myDialog = new Dialog(newEl, 'header', 'footer');
 
 document.getElementsByClassName('dialog-btn')[0].addEventListener('click', function() {
 	console.log('here');
