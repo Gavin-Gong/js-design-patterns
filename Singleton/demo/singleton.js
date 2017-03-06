@@ -37,16 +37,11 @@ let Dialog = (function() {
 			$updateDOM(type, content) {
 				console.log(content)
 				if (!!content.nodeType) {
-					// this[type].chilNodes.length && this[type].appendChild(content);
-
-					// clear chilNodes
+					// clear chilNodes 
 					let tmpNode = this[type];
-					let firstEle = tmpNode.firstChild;
-					while( firstEle) {
-						tmpNode.removeChild(firstEle);
-						firstEle = tmpNode.firstChild
-					}
-					this[type].appendChild(content);
+					let emptyNode = tmpNode.cloneNode(false);
+					tmpNode.parentNode.replaceChild(emptyNode.appendChild(content), tmpNode);
+					// append node
 				} else if (typeof content === 'string') {
 					this[type].textContent = content;
 				} else {

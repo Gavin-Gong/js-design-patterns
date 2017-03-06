@@ -10,3 +10,6 @@
 
 TODO:
 Dialog.open() 这样的接口感觉会更好
+
+BUG:
+Dialog('df', 'gg', '方法').open() 这样不会更新DOM
