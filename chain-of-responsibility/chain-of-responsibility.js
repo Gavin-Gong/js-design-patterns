@@ -15,8 +15,10 @@ Chain.prototype.setNext = function(next) {
 Chain.prototype.passReq = function() {
 	let result = this.fn.apply(this, arguments);
 
+	console.log(this);
 	if (result === 'next') {
-		return this.next && this.next.passReq.apply(this.next, arguments);
+		return this.next && this.next.passReq.apply(this.next, arguments); // 调用下一个对象参数处理函数 
+		// return this.next && this.next.passReq(arguments);
 	}
 	return result;
 }
@@ -53,3 +55,5 @@ chainFoo.setNext(chainBar);
 chainBar.setNext(chainZoo);
 
 chainFoo.passReq(1, 3);
+// chainFoo.passReq(0, 3);
+// chainFoo.passReq(1, 0);
